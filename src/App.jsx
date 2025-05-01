@@ -1,33 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tubes, setTube] = useState([])
+
+  useEffect(() => {
+    async function getTubeLines() {
+      try {
+        console.log("Fetching tube lines...")
+
+        const { data } = await axios.get('https://api.tfl.gov.uk/line/mode/tube/status')
+
+          setTube(data)
+      } catch (error) {
+        console.log(error);
+        
+      }
+    }
+    getTubeLines()
+
+    const interval = setInterval(getTubeLines, 300000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <h1>Tube Line Statuses</h1>
+      <div className="container">
+        {tubes.length > 0 && tubes.map((tube, index) => (
+          
+          <div className='tubelines' key={index}>
+            <h2>{tube.name}</h2>
+            <p>{tube.lineStatuses[0].statusSeverityDescription}</p>
+          </div>
+          
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }

@@ -3,7 +3,20 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
+
+  .container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .tubelines {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
 
 .logo {
   height: 6em;
